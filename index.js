@@ -1,0 +1,1 @@
+console.log("this is WEEK 1 of Node JS intership with Geogo Tech Solutions")
