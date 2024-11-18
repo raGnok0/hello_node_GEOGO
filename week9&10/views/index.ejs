@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../style/style.css">
+    <title>TODO MANAGER</title>
+</head>
+<body>
+    <div>
+        <div>
+            <h1>TODO LISTS</h1>
+        </div>
+        <div>
+            <ol>
+                <% rows.forEach(row=> { %>
+                    <li><strong>
+                            <%= row.title %>
+                        </strong> - <%= row.description %> <button onclick="del('<%= row.id %>')" data-csrf="<%= csrfToken %>" id="btn">DELETE</button>
+                            <form action="/todos/<%= row.id %>?_method=PUT" method="post">
+                                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                <input type="text" placeholder="Title" name="title" id="title" />
+                                <input type="text" placeholder="Description" name="description" id="description" />
+                                <input type="text" placeholder="Status" name="status" id="status" />
+                                <input type="text" placeholder="Due Date" name="duedate" id="duedate" />
+                                <button type="submit">EDIT</button>
+                            </form>
+                    </li>
+                    <% }) %>
+            </ol>
+        </div>
+        <hr>
+        <div>
+            <div>
+                <div>
+                    <label>Create TODO LIST</label>
+                    <form method="post" action="/todos">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <label>Title</label>
+                        <input type="text" placeholder="Title" name="title" id="title" />
+                        <br>
+                        <label>Description</label>
+                        <input type="text" placeholder="Description" name="description" id="description" />
+                        <br>
+                        <label>Status</label>
+                        <input type="text" placeholder="Status" name="status" id="status" />
+                        <br>
+                        <label>Due Date</label>
+                        <input type="text" placeholder="Due Date" name="duedate" id="duedate" />
+                        <br>
+                        <div>
+                            <button type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        // async function isAuth(){
+        //     const token = localStorage.getItem('token')
+
+        //     if(!token){
+        //         window.location.href('/login');
+        //     }
+        // }
+        // isAuth()
+        const del = async (id) => {
+            try {
+                const csrfToken = document.getElementById('btn').getAttribute('data-csrf')
+                await fetch(`/todos/${id}`, {
+                    method: 'DELETE',
+                    headers:{
+                        'Content-Type':'application/json',
+                        'CSRF-Token':csrfToken
+                    }
+                })
+                location.reload()
+            } catch (err) {
+                console.log("delete error:", err)
+            }
+        }
+
+    </script>
+</body>
+
+</html>
